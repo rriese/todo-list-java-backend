@@ -1,7 +1,8 @@
-package com.github.riese.rafael.todolist.controllers;
+package com.github.riese.rafael.todolist.resource;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,32 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.riese.rafael.todolist.models.User;
+import com.github.riese.rafael.todolist.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserResource {
 	
-	private List<User> users = new ArrayList<User>();
-	
+	@Resource
+	private UserService userService;
+
 	@GetMapping("/")
 	public List<User> getUsers() {
-		return this.users;
+		return userService.getUsers();
 	}
 	
 	@GetMapping("/{username}")
-	public User getUser(@PathVariable("username") String username) {
-		return this.users.stream().filter(user -> user.getUsername().equals(username)).findFirst().orElse(null);
+	public User getUserByUsername(@PathVariable("username") String username) {
+		return userService.getUserByUsername(username);
 	}
 	
 	@PostMapping("/")
-	public User persistUser(@RequestBody User user) {
-		this.users.add(user);
-		return user;
+	public User persistUser(@RequestBody User user) throws Exception {
+		return userService.persistUser(user);
 	}
 	
 	@DeleteMapping("/{username}")
 	public boolean deleteUser(@PathVariable String username) {
-		return users.removeIf(c -> c.getUsername().equals(username));
+		return userService.deleteUser(username);
 	}
 	
 }
