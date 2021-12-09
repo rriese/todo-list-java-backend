@@ -13,7 +13,7 @@ public class UserDao {
 	private List<User> usersDB = new ArrayList<User>();
 	
 	public void addUser(User user) throws Exception {
-		boolean hasAlreadyUserWithUsername = this.usersDB.stream().filter(u -> u.getUsername().equals(user.getUsername())).findFirst().isPresent();
+		boolean hasAlreadyUserWithUsername = this.usersDB.stream().anyMatch(u -> u.getUsername().equals(user.getUsername()));
 		if (hasAlreadyUserWithUsername) throw new Exception("Username already in use!");
 		this.usersDB.add(user);
 	}
