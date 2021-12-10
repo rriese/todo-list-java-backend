@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.riese.rafael.todolist.models.User;
+import com.github.riese.rafael.todolist.dao.EmptyJson;
+import com.github.riese.rafael.todolist.model.User;
 import com.github.riese.rafael.todolist.service.UserService;
 
 @RestController
@@ -28,8 +31,14 @@ public class UserResource {
 	}
 	
 	@GetMapping("/{username}")
-	public User getUserByUsername(@PathVariable("username") String username) {
-		return userService.getUserByUsername(username);
+	public ResponseEntity<?> getUserByUsername(@PathVariable("username") String username) {
+        User user = userService.getUserByUsername(username);
+        
+        if (user != null) {
+        	return new ResponseEntity<>(user, HttpStatus.OK);
+        } else {
+        	return new ResponseEntity<>(new EmptyJson(), HttpStatus.OK);
+        }
 	}
 	
 	@PostMapping("/")

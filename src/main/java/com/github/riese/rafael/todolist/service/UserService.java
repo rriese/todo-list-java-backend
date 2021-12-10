@@ -7,29 +7,35 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.github.riese.rafael.todolist.dao.UserDao;
-import com.github.riese.rafael.todolist.models.User;
+import com.github.riese.rafael.todolist.model.User;
 
 @Service
 public class UserService {
 	
 	@Resource
 	private UserDao userDao;
-	
+
 	public List<User> getUsers() {
-		return userDao.getUsers();
+		return userDao.findAll();
 	}
 	
 	public User getUserByUsername(String username) {
-		return userDao.getUsers().stream().filter(user -> user.getUsername().equals(username)).findFirst().orElse(null);
+		List<User> user = userDao.findByUsername(username);
+		return user.size() > 0 ? user.get(0) : null;
 	}
 	
 	public User persistUser(User user) throws Exception {
-		userDao.addUser(user);
-		return user;
+		return userDao.insert(user);
 	}
 	
 	public boolean deleteUser(String username) {
-		return userDao.removeUser(username);
+		User user = this.getUserByUsername(username);
+		
+		if (user != null) {
+			userDao.deleteById(user.getId());
+			return true;			
+		}
+		return false;
 	}
 	
 }
