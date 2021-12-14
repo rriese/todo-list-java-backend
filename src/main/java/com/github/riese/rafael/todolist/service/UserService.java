@@ -25,7 +25,13 @@ public class UserService {
 	}
 	
 	public User persistUser(User user) throws Exception {
-		return userDao.insert(user);
+		User userPersisted = null;
+		try {
+			userPersisted = userDao.insert(user);
+		} catch (Exception e) {
+			throw new Exception("An error occured on database, please contact the administrator.");
+		}
+		return userPersisted;
 	}
 	
 	public boolean deleteUser(String username) {

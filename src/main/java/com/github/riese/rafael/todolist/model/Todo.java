@@ -1,5 +1,9 @@
 package com.github.riese.rafael.todolist.model;
 
+import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,14 +17,18 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "users")
-public class User {	
-	
+@Document(collection = "todos")
+public class Todo {
+
 	@Id
 	private String id;
-	private String name;
 	@Indexed(unique=true)
-	private String username;
-	private String password;
+	@NotNull(message = "Title must not be null")
+	private String title;
+	@NotNull(message = "Description must not be null")
+	private String description;
+	@NotNull(message = "Finished flag must not be null")
+	private boolean finished;
+	private Date date;
 	
 }
